@@ -1,0 +1,72 @@
+<div class="login-wrapper fade-in">
+  <div class="login-container">
+    <div class="login-card card">
+      <div class="login-header">
+        <div class="login-icon">
+          <div class="icon-circle admin-gradient">
+            🔐
+          </div>
+        </div>
+        <h2 class="login-title text-2xl font-bold text-gray-800">Admin Portal</h2>
+        <p class="login-subtitle text-gray-600">Administrative access to the library system</p>
+      </div>
+      
+      <div class="login-body">
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <div class="input-group">
+              <div class="input-icon">👤</div>
+              <input 
+                type="text" 
+                name="username" 
+                [(ngModel)]="username" 
+                required 
+                class="form-input pl-12"
+                placeholder="Enter admin username"
+              />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-group">
+              <div class="input-icon">🔑</div>
+              <input 
+                type="password" 
+                name="password" 
+                [(ngModel)]="password" 
+                required 
+                class="form-input pl-12"
+                placeholder="Enter admin password"
+              />
+            </div>
+          </div>
+          
+          <div *ngIf="error" class="form-error text-center p-md rounded bg-red-50 border border-red-200 mb-lg">
+            <div class="error-icon">⚠️</div>
+            {{ error }}
+          </div>  
+          <button 
+            type="submit" 
+            [disabled]="!loginForm.form.valid"
+            class="btn btn-primary btn-lg w-full"
+            [class.loading]="isLoading"
+          >
+            <span *ngIf="!isLoading">Access Admin Panel</span>
+            <span *ngIf="isLoading">Authenticating...</span>
+          </button>
+        </form>
+        
+        <div class="login-footer">
+          <div class="divider">
+            <span class="divider-text">or</span>
+          </div>
+          <a href="/" class="btn btn-ghost w-full">
+            Back to Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,167 @@
+<div class="dashboard-wrapper fade-in">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="dashboard-title">
+        <div class="title-icon">🔐</div>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+          <p class="text-gray-600">Manage library operations and records</p>
+        </div>
+      </div>
+      <button (click)="logout()" class="btn btn-outline btn-sm">
+        <span class="logout-icon">👋</span>
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <div class="dashboard-body container">
+    <div class="action-cards">
+      <div class="action-card card" (click)="toggleForm('borrow')" [class.active]="activeForm === 'borrow'">
+        <div class="card-icon borrow-gradient">📚</div>
+        <h3 class="font-semibold text-gray-800">Issue Book</h3>
+        <p class="text-sm text-gray-600">Lend books to members</p>
+      </div>
+      <div class="action-card card" (click)="toggleForm('return')" [class.active]="activeForm === 'return'">
+        <div class="card-icon return-gradient">🔄</div>
+        <h3 class="font-semibold text-gray-800">Return Book</h3>
+        <p class="text-sm text-gray-600">Process book returns</p>
+      </div>
+      <div class="action-card card" (click)="viewAllBooks()">
+        <div class="card-icon books-gradient">📖</div>
+        <h3 class="font-semibold text-gray-800">Manage Books</h3>
+        <p class="text-sm text-gray-600">View and add books</p>
+      </div>
+      <div class="action-card card" (click)="viewAllMembers()">
+        <div class="card-icon members-gradient">👥</div>
+        <h3 class="font-semibold text-gray-800">Manage Members</h3>
+        <p class="text-sm text-gray-600">View and add members</p>
+      </div>
+    </div>
+
+    <div *ngIf="activeForm === 'borrow'" class="form-section slide-up">
+      <div class="form-card card">
+        <div class="card-header">
+          <h3 class="text-xl font-semibold text-gray-800">📚 Issue Book</h3>
+          <p class="text-gray-600">Lend a book to a library member</p>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="submitBorrow()" #borrowForm="ngForm" class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Member ID</label>
+              <input type="number" placeholder="Enter member ID" [(ngModel)]="borrowData.member_id" name="member_id" required class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ISBN Number</label>
+              <input type="text" placeholder="Enter book ISBN" [(ngModel)]="borrowData.isbn" name="isbn" required class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Return Date</label>
+              <input type="date" [(ngModel)]="borrowData.return_date" name="return_date" required class="form-input">
+            </div>
+            <div class="form-actions">
+              <button type="submit" [disabled]="!borrowForm.form.valid" class="btn btn-success btn-lg">
+                Issue Book
+              </button>
+              <button type="button" (click)="activeForm = null" class="btn btn-ghost">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeForm === 'return'" class="form-section slide-up">
+      <div class="form-card card">
+        <div class="card-header">
+          <h3 class="text-xl font-semibold text-gray-800">🔄 Return Book</h3>
+          <p class="text-gray-600">Process a book return from a member</p>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="submitReturn()" #returnForm="ngForm" class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Member ID</label>
+              <input type="number" placeholder="Enter member ID" [(ngModel)]="returnData.member_id" name="member_id" required class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ISBN Number</label>
+              <input type="text" placeholder="Enter book ISBN" [(ngModel)]="returnData.isbn" name="isbn" required class="form-input">
+            </div>
+            <div class="form-actions">
+              <button type="submit" [disabled]="!returnForm.form.valid" class="btn btn-primary btn-lg">
+                Process Return
+              </button>
+              <button type="button" (click)="activeForm = null" class="btn btn-ghost">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="records-section">
+      <div class="section-header">
+        <div class="section-title">
+          <h3 class="text-xl font-semibold text-gray-800">📊 Borrow Records</h3>
+          <p class="text-gray-600">Track all book lending and returns</p>
+        </div>
+        <div class="record-stats">
+          <div class="stat-card">
+            <div class="stat-value text-primary">{{borrowRecords.length || 0}}</div>
+            <div class="stat-label">Total Records</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Member ID</th>
+              <th>ISBN</th>
+              <th>Borrowed</th>
+              <th>Return By</th>
+              <th>Returned On</th>
+              <th>Fine</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let record of borrowRecords" [class.overdue-row]="record.overdue">
+              <td class="font-medium">{{record.member_id}}</td>
+              <td class="font-mono text-sm">{{record.isbn}}</td>
+              <td>{{record.borrow_date | date:'MMM dd, yyyy'}}</td>
+              <td>{{record.return_date | date:'MMM dd, yyyy'}}</td>
+              <td>
+                <span *ngIf="record.returned_on" class="status-badge status-returned">
+                  {{record.returned_on | date:'MMM dd, yyyy'}}
+                </span>
+                <span *ngIf="!record.returned_on" class="status-badge status-pending">
+                  Not Returned
+                </span>
+              </td>
+              <td>
+                <span [class.text-danger]="record.fine > 0" class="font-medium">
+                  ₹{{record.fine || 0}}
+                </span>
+              </td>
+              <td>
+                <span *ngIf="record.overdue" class="status-badge status-overdue">Overdue</span>
+                <span *ngIf="!record.overdue && !record.returned_on" class="status-badge status-active">Active</span>
+                <span *ngIf="!record.overdue && record.returned_on" class="status-badge status-completed">Completed</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div *ngIf="!borrowRecords || borrowRecords.length === 0" class="empty-state">
+          <div class="empty-icon">📊</div>
+          <h4 class="text-lg font-medium text-gray-600">No records yet</h4>
+          <p class="text-gray-500">Borrow records will appear here once books are issued</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

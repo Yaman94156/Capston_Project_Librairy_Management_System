@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  # ---------- FRONTEND ----------
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "8088:80"
+    depends_on:
+      - gateway
+
+  # ---------- GATEWAY ----------
+  gateway:
+    build:
+      context: ./backend/gateway
+    container_name: gateway
+    ports:
+      - "5000:5000"
+    depends_on:
+      - admin-service
+      - member-service
+      - book-service
+    environment:
+      - ADMIN_SERVICE_URL=http://admin-service:5003
+      - BOOK_SERVICE_URL=http://book-service:5001
+      - MEMBER_SERVICE_URL=http://member-service:5002
+
+  # ---------- ADMIN SERVICE ----------
+  admin-service:
+    build:
+      context: ./backend/admin_service
+    container_name: admin-service
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./backend/admin_service/instance:/app/instance  
+
+  # ---------- BOOK SERVICE ----------
+  book-service:
+    build:
+      context: ./backend/book_service
+    container_name: book-service
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./backend/book_service/instance:/app/instance 
+
+  # ---------- MEMBER SERVICE ----------
+  member-service:
+    build:
+      context: ./backend/member_service
+    container_name: member-service
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./backend/member_service/instance:/app/instance  
+

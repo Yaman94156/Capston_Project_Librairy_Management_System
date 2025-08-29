@@ -1,0 +1,224 @@
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  background: linear-gradient(135deg, 
+    var(--primary-blue-dark) 0%, 
+    var(--primary-blue) 50%, 
+    var(--secondary-purple) 100%);
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-card {
+  background: white;
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: none;
+  overflow: hidden;
+}
+
+.login-header {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-lg) var(--space-lg);
+  background: linear-gradient(135deg, var(--gray-50), white);
+}
+
+.login-icon {
+  margin-bottom: var(--space-lg);
+}
+
+.icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-gradient {
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+  color: white;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+.login-title {
+  margin-bottom: var(--space-sm);
+  background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.login-subtitle {
+  font-size: 0.95rem;
+}
+
+.login-body {
+  padding: var(--space-lg) var(--space-lg) var(--space-2xl);
+}
+
+.login-form {
+  margin-bottom: var(--space-xl);
+}
+
+.form-group {
+  margin-bottom: var(--space-lg);
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  font-size: 1.1rem;
+  color: var(--gray-400);
+}
+
+.pl-12 {
+  padding-left: 3rem;
+}
+
+.form-input {
+  transition: all 0.3s ease;
+}
+
+.form-input:focus + .input-icon,
+.form-input:not(:placeholder-shown) + .input-icon {
+  color: var(--primary-blue);
+}
+
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+.error-icon {
+  font-size: 1.2rem;
+}
+
+.bg-red-50 {
+  background-color: #fef2f2;
+}
+
+.border-red-200 {
+  border-color: #fecaca;
+}
+
+.admin-notice {
+  background: var(--primary-blue-light);
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid var(--primary-blue-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.notice-icon {
+  font-size: 1.1rem;
+  color: var(--primary-blue);
+}
+
+.login-footer {
+  border-top: 1px solid var(--gray-200);
+  padding-top: var(--space-lg);
+}
+
+.divider {
+  position: relative;
+  text-align: center;
+  margin: var(--space-lg) 0;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gray-300);
+}
+
+.divider-text {
+  background: white;
+  padding: 0 var(--space-md);
+  color: var(--gray-500);
+  font-size: 0.875rem;
+  position: relative;
+}
+
+.btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  margin-left: -10px;
+  margin-top: -10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+  .login-wrapper {
+    padding: var(--space-md);
+  }
+  
+  .login-header {
+    padding: var(--space-xl) var(--space-md) var(--space-lg);
+  }
+  
+  .login-body {
+    padding: var(--space-lg) var(--space-md) var(--space-xl);
+  }
+  
+  .icon-circle {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+  
+  .login-title {
+    font-size: 1.5rem;
+  }
+  
+  .admin-notice {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-xs);
+  }
+}

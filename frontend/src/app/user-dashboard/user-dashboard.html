@@ -1,0 +1,190 @@
+<div class="user-dashboard-wrapper fade-in">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="dashboard-title">
+        <div class="title-icon">📚</div>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800">My Library Dashboard</h1>
+          <p class="text-gray-600">Track your borrowed books and library activity</p>
+        </div>
+      </div>
+      <button (click)="logout()" class="btn btn-outline btn-sm">
+        <span class="logout-icon">👋</span>
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <div class="dashboard-body container">
+    <!-- Quick Stats -->
+    <div class="stats-section">
+      <div class="stats-cards">
+        <div class="stat-card card">
+          <div class="stat-icon books-icon">📖</div>
+          <div class="stat-content">
+            <div class="stat-value">{{activeBooksCount || 0}}</div>
+            <div class="stat-label">Active Loans</div>
+          </div>
+        </div>
+        <div class="stat-card card">
+          <div class="stat-icon overdue-icon">⏰</div>
+          <div class="stat-content">
+            <div class="stat-value text-danger">{{overdueBooksCount || 0}}</div>
+            <div class="stat-label">Overdue Books</div>
+          </div>
+        </div>
+        <div class="stat-card card">
+          <div class="stat-icon fine-icon">💰</div>
+          <div class="stat-content">
+            <div class="stat-value text-warning">₹{{totalFine || 0}}</div>
+            <div class="stat-label">Total Fine</div>
+          </div>
+        </div>
+        <div class="stat-card card">
+          <div class="stat-icon history-icon">📊</div>
+          <div class="stat-content">
+            <div class="stat-value">{{borrowRecords.length || 0}}</div>
+            <div class="stat-label">Total History</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Borrowed Books Section -->
+    <div class="books-section">
+      <div class="section-header">
+        <div class="section-title">
+          <h2 class="text-xl font-semibold text-gray-800">📚 My Borrowed Books</h2>
+          <p class="text-gray-600">Your current and past book loans</p>
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-tab" [class.active]="currentFilter === 'all'" (click)="setFilter('all')">All</button>
+          <button class="filter-tab" [class.active]="currentFilter === 'active'" (click)="setFilter('active')">Active</button>
+          <button class="filter-tab" [class.active]="currentFilter === 'overdue'" (click)="setFilter('overdue')">Overdue</button>
+          <button class="filter-tab" [class.active]="currentFilter === 'returned'" (click)="setFilter('returned')">Returned</button>
+        </div>
+      </div>
+      
+      <div class="books-list">
+        <!-- Mobile Cards View -->
+        <div class="mobile-cards">
+          <div *ngFor="let record of filteredRecords" class="book-card card" [class.overdue-card]="record.overdue && !record.returned_on">
+            <div class="book-card-header">
+              <div class="book-info">
+                <h4 class="book-title">{{record.book_name}}</h4>
+                <p class="book-isbn">ISBN: {{record.isbn}}</p>
+              </div>
+              <div class="book-status">
+                <span *ngIf="record.overdue && !record.returned_on" class="status-badge status-overdue">Overdue</span>
+                <span *ngIf="!record.overdue && !record.returned_on" class="status-badge status-active">Active</span>
+                <span *ngIf="record.returned_on" class="status-badge status-returned">Returned</span>
+              </div>
+            </div>
+            
+            <div class="book-card-body">
+              <div *ngIf="record.description" class="book-description">
+                <p>{{record.description}}</p>
+              </div>
+              
+              <div class="book-dates">
+                <div class="date-item">
+                  <span class="date-label">Borrowed:</span>
+                  <span class="date-value">{{record.borrow_date | date:'MMM dd, yyyy'}}</span>
+                </div>
+                <div class="date-item">
+                  <span class="date-label">Due:</span>
+                  <span class="date-value" [class.text-danger]="record.overdue && !record.returned_on">
+                    {{record.return_date | date:'MMM dd, yyyy'}}
+                  </span>
+                </div>
+                <div *ngIf="record.returned_on" class="date-item">
+                  <span class="date-label">Returned:</span>
+                  <span class="date-value text-success">{{record.returned_on | date:'MMM dd, yyyy'}}</span>
+                </div>
+              </div>
+              
+              <div class="book-metrics">
+                <div *ngIf="!record.returned_on" class="days-left">
+                  <span class="metric-label">Days Left:</span>
+                  <span class="metric-value" [class.text-danger]="record.days_left < 0" [class.text-warning]="record.days_left >= 0 && record.days_left <= 3">
+                    {{record.days_left >= 0 ? record.days_left : 'Overdue by ' + Math.abs(record.days_left)}}
+                  </span>
+                </div>
+                <div *ngIf="record.fine > 0" class="fine-amount">
+                  <span class="metric-label">Fine:</span>
+                  <span class="metric-value text-danger">₹{{record.fine}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desktop Table View -->
+        <div class="desktop-table">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Book Details</th>
+                  <th>Borrow Date</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  <th>Fine</th>
+                  <th>Returned</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let record of filteredRecords" [class.overdue-row]="record.overdue && !record.returned_on">
+                  <td>
+                    <div class="book-details">
+                      <div class="book-name font-medium">{{record.book_name}}</div>
+                      <div class="book-isbn text-sm text-gray-600">{{record.isbn}}</div>
+                      <div *ngIf="record.description" class="book-desc text-sm text-gray-500">
+                        {{record.description.length > 60 ? (record.description.substring(0, 60) + '...') : record.description}}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="date-text">{{record.borrow_date | date:'MMM dd, yyyy'}}</span>
+                  </td>
+                  <td>
+                    <span class="date-text" [class.text-danger]="record.overdue && !record.returned_on">
+                      {{record.return_date | date:'MMM dd, yyyy'}}
+                    </span>
+                    <div *ngIf="!record.returned_on && record.days_left !== undefined" class="days-indicator text-sm">
+                      <span [class.text-danger]="record.days_left < 0" [class.text-warning]="record.days_left >= 0 && record.days_left <= 3" [class.text-gray-600]="record.days_left > 3">
+                        {{record.days_left >= 0 ? record.days_left + ' days left' : Math.abs(record.days_left) + ' days overdue'}}
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <span *ngIf="record.overdue && !record.returned_on" class="status-badge status-overdue">Overdue</span>
+                    <span *ngIf="!record.overdue && !record.returned_on" class="status-badge status-active">Active</span>
+                    <span *ngIf="record.returned_on" class="status-badge status-returned">Returned</span>
+                  </td>
+                  <td>
+                    <span *ngIf="record.fine > 0" class="fine-amount text-danger font-medium">₹{{record.fine}}</span>
+                    <span *ngIf="record.fine === 0" class="text-gray-400">—</span>
+                  </td>
+                  <td>
+                    <span *ngIf="record.returned_on" class="returned-date text-success">
+                      {{record.returned_on | date:'MMM dd, yyyy'}}
+                    </span>
+                    <span *ngIf="!record.returned_on" class="not-returned text-warning">Not Returned</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div *ngIf="!borrowRecords || borrowRecords.length === 0" class="empty-state">
+          <div class="empty-icon">📚</div>
+          <h4 class="text-lg font-medium text-gray-600">No books borrowed yet</h4>
+          <p class="text-gray-500">Visit the library to borrow your first book!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

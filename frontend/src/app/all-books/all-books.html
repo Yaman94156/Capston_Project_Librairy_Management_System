@@ -1,0 +1,233 @@
+<div class="books-wrapper fade-in">
+  <div class="books-header">
+    <div class="header-content">
+      <div class="page-title">
+        <div class="title-icon">📚</div>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800">Book Management</h1>
+          <p class="text-gray-600">Search, add, and manage library books</p>
+        </div>
+      </div>
+    </div>
+  </div>
+   <a class="back-btn" href="/adminDashboard">Back to Dashboard</a>
+  <div class="books-body container">
+ 
+    <!-- Search Section -->
+    <div class="search-section card">
+      <div class="card-header">
+        <h3 class="text-lg font-semibold text-gray-800">🔍 Search Books</h3>
+      </div>
+      <div class="card-body">
+        <div class="search-form">
+          <div class="search-inputs">
+            <!-- <div class="form-group">
+              <label class="form-label">Book ID</label>
+              <input type="number" [(ngModel)]="searchId" placeholder="Enter book ID" class="form-input">
+            </div> -->
+            <div class="form-group">
+              <label class="form-label">ISBN</label>
+              <input type="text" [(ngModel)]="searchIsbn" placeholder="Enter ISBN" class="form-input">
+            </div>
+          </div>
+          <div class="search-actions">
+            <button (click)="searchBooks()" class="btn btn-primary">
+              🔍 Search
+            </button>
+            <button (click)="clearSearch()" class="btn btn-ghost">
+              Clear
+            </button>
+          </div>
+        </div>
+        
+        <div *ngIf="foundBook" class="search-result slide-up">
+          <div class="result-card">
+            <div class="result-header">
+              <h4 class="font-semibold text-gray-800">{{foundBook.name}}</h4>
+              <div class="availability-badge" [class.available]="foundBook.quantity > 0" [class.unavailable]="foundBook.quantity === 0">
+                {{foundBook.quantity > 0 ? 'Available' : 'Out of Stock'}}
+              </div>
+            </div>
+            <div class="result-details">
+              <div class="detail-item">
+                <span class="detail-label">Author:</span>
+                <span class="detail-value">{{foundBook.author}}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">ISBN:</span>
+                <span class="detail-value font-mono">{{foundBook.isbn}}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Quantity:</span>
+                <span class="detail-value font-semibold" [class.text-success]="foundBook.quantity > 0" [class.text-danger]="foundBook.quantity === 0">
+                  {{foundBook.quantity}}
+                </span>
+              </div>
+              <div *ngIf="foundBook.description" class="detail-item description">
+                <span class="detail-label">Description:</span>
+                <span class="detail-value">{{foundBook.description}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Books List Section -->
+    <div class="books-list-section">
+      <div class="section-header">
+        <div class="section-title">
+          <h2 class="text-xl font-semibold text-gray-800">All Books</h2>
+          <p class="text-gray-600">Manage your library collection</p>
+        </div>
+        <button (click)="showAddForm = true; editingBook = null;" class="btn btn-success">
+          ➕ Add New Book
+        </button>
+      </div>
+
+      <!-- Add Book Form -->
+      <div *ngIf="showAddForm" class="form-section slide-up">
+        <div class="form-card card">
+          <div class="card-header">
+            <h3 class="text-xl font-semibold text-gray-800">📖 Add New Book</h3>
+            <p class="text-gray-600">Enter book details to add to the library</p>
+          </div>
+          <div class="card-body">
+            <form #addForm="ngForm" (ngSubmit)="addBook()" class="book-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">ISBN *</label>
+                  <input type="text" name="isbn" placeholder="Enter ISBN number" [(ngModel)]="newBook.isbn" required class="form-input">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Book Title *</label>
+                  <input type="text" name="name" placeholder="Enter book title" [(ngModel)]="newBook.name" required class="form-input">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Author *</label>
+                  <input type="text" name="author" placeholder="Enter author name" [(ngModel)]="newBook.author" required class="form-input">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Quantity *</label>
+                  <input type="number" name="quantity" placeholder="Enter quantity" [(ngModel)]="newBook.quantity" required min="0" class="form-input">
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label">Description</label>
+                  <textarea name="description" placeholder="Enter book description (optional)" [(ngModel)]="newBook.description" class="form-input form-textarea"></textarea>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" [disabled]="addForm.invalid" class="btn btn-success btn-lg">
+                  ➕ Add Book
+                </button>
+                <button type="button" (click)="showAddForm = false" class="btn btn-ghost">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Books Table -->
+      <div class="table-section">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ISBN</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Stock</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let book of books" [class.out-of-stock]="book.quantity === 0">
+                <td class="font-mono text-sm">{{book.isbn}}</td>
+                <td class="font-medium">{{book.name}}</td>
+                <td class="text-gray-600">{{book.author}}</td>
+                <td>
+                  <span class="quantity-badge" [class.available]="book.quantity > 0" [class.unavailable]="book.quantity === 0">
+                    {{book.quantity}}
+                  </span>
+                </td>
+                <td class="description-cell">
+                  <span *ngIf="book.description" [title]="book.description">
+                    {{book.description.length > 50 ? (book.description.substring(0, 50) + '...') : book.description}}
+                  </span>
+                  <span *ngIf="!book.description" class="text-gray-400">No description</span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button (click)="startEdit(book)" class="btn btn-sm btn-outline" title="Edit book">
+                      ✏️
+                    </button>
+                    <button (click)="deleteBook(book.id)" class="btn btn-sm btn-danger" title="Delete book">
+                      🗑️
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div *ngIf="!books || books.length === 0" class="empty-state">
+            <div class="empty-icon">📚</div>
+            <h4 class="text-lg font-medium text-gray-600">No books found</h4>
+            <p class="text-gray-500">Start by adding your first book to the library</p>
+            <button (click)="showAddForm = true; editingBook = null;" class="btn btn-primary mt-md">
+              ➕ Add First Book
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Book Form -->
+      <div *ngIf="editingBook" class="form-section slide-up">
+        <div class="form-card card">
+          <div class="card-header">
+            <h3 class="text-xl font-semibold text-gray-800">✏️ Edit Book</h3>
+            <p class="text-gray-600">Update book information</p>
+          </div>
+          <div class="card-body">
+            <form #editForm="ngForm" (ngSubmit)="updateBook()" class="book-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">ISBN *</label>
+                  <input type="text" name="isbn" placeholder="ISBN" [(ngModel)]="editingBook.isbn" required disabled class="form-input disabled">
+                  <small class="form-help">ISBN cannot be changed</small>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Book Title *</label>
+                  <input type="text" name="name" placeholder="Enter book title" [(ngModel)]="editingBook.name" required class="form-input">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Author *</label>
+                  <input type="text" name="author" placeholder="Enter author name" [(ngModel)]="editingBook.author" required class="form-input">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Quantity *</label>
+                  <input type="number" name="quantity" placeholder="Enter quantity" [(ngModel)]="editingBook.quantity" required min="0" class="form-input">
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label">Description</label>
+                  <textarea name="description" placeholder="Enter book description (optional)" [(ngModel)]="editingBook.description" class="form-input form-textarea"></textarea>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" [disabled]="editForm.invalid" class="btn btn-primary btn-lg">
+                  💾 Update Book
+                </button>
+                <button type="button" (click)="editingBook = null" class="btn btn-ghost">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

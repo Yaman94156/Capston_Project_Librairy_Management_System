@@ -1,0 +1,172 @@
+<div class="members-wrapper fade-in">
+  <div class="members-header">
+    <div class="header-content">
+      <div class="page-title">
+        <div class="title-icon">👥</div>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800">Member Management</h1>
+          <p class="text-gray-600">Register and manage library members</p>
+        </div>
+      </div>
+    </div>
+    <a class="back-btn" href="/adminDashboard">Back to Dashboard</a>
+  </div>
+
+  <div class="members-body container">
+    <!-- Members List Section -->
+    <div class="members-list-section">
+      <div class="section-header">
+        <div class="section-title">
+          <h2 class="text-xl font-semibold text-gray-800">All Members</h2>
+          <p class="text-gray-600">Manage library membership</p>
+        </div>
+        <button (click)="showAddForm = true; editingMember = null" class="btn btn-success">
+          ➕ Add New Member
+        </button>
+      </div>
+
+      <!-- Add Member Form -->
+      <div *ngIf="showAddForm" class="form-section slide-up">
+        <div class="form-card card">
+          <div class="card-header">
+            <h3 class="text-xl font-semibold text-gray-800">👤 Add New Member</h3>
+            <p class="text-gray-600">Register a new library member</p>
+          </div>
+          <div class="card-body">
+            <form #addForm="ngForm" (ngSubmit)="addMember()" class="member-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Member ID</label>
+                  <input type="number" name="name" placeholder="Enter full name" [(ngModel)]="newMember.id" required class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Full Name *</label>
+                  <input type="text" name="name" placeholder="Enter full name" [(ngModel)]="newMember.name" required class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email Address *</label>
+                  <input type="email" name="email" placeholder="Enter email address" [(ngModel)]="newMember.email" required class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Phone Number</label>
+                  <input type="text" name="phone" placeholder="Enter phone number" [(ngModel)]="newMember.phone" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Address</label>
+                  <input type="text" name="address" placeholder="Enter address" [(ngModel)]="newMember.address" class="form-input" />
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label">Password *</label>
+                  <input type="password" name="password" placeholder="Enter password for member login" [(ngModel)]="newMember.password" required class="form-input" />
+                  <small class="form-help">This password will be used for member login</small>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" [disabled]="addForm.invalid" class="btn btn-success btn-lg">
+                  ➕ Add Member
+                </button>
+                <button type="button" (click)="showAddForm = false" class="btn btn-ghost">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Members Table -->
+      <div class="table-section">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let member of members">
+                <td>
+                  <div class="member-info">
+                    <div class="member-avatar">
+                      {{member.name.charAt(0).toUpperCase() || '?'}}
+                    </div>
+                  </div>
+                </td>
+                <td class="text-gray-600">{{member.id}}</td>
+                <td class="text-gray-600">{{member.name}}</td>
+                <td class="text-gray-600">{{member.email}}</td>
+                <td class="text-gray-600">{{member.phone || 'Not provided'}}</td>
+                <td class="text-gray-600">{{member.address || 'Not provided'}}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button (click)="startEdit(member)" class="btn btn-sm btn-outline" title="Edit member">
+                      ✏️
+                    </button>
+                    <button (click)="deleteMember(member.id)" class="btn btn-sm btn-danger" title="Delete member">
+                      🗑️
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div *ngIf="!members || members.length === 0" class="empty-state">
+            <div class="empty-icon">👥</div>
+            <h4 class="text-lg font-medium text-gray-600">No members registered</h4>
+            <p class="text-gray-500">Start by registering your first library member</p>
+            <button (click)="showAddForm = true; editingMember = null" class="btn btn-primary mt-md">
+              ➕ Register First Member
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Member Form -->
+      <div *ngIf="editingMember" class="form-section slide-up">
+        <div class="form-card card">
+          <div class="card-header">
+            <h3 class="text-xl font-semibold text-gray-800">✏️ Edit Member</h3>
+            <p class="text-gray-600">Update member information</p>
+          </div>
+          <div class="card-body">
+            <form #editForm="ngForm" (ngSubmit)="updateMember()" class="member-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Full Name *</label>
+                  <input type="text" name="name" placeholder="Enter full name" [(ngModel)]="editingMember.name" required class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email Address *</label>
+                  <input type="email" name="email" placeholder="Enter email address" [(ngModel)]="editingMember.email" required class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Phone Number</label>
+                  <input type="text" name="phone" placeholder="Enter phone number" [(ngModel)]="editingMember.phone" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Address</label>
+                  <input type="text" name="address" placeholder="Enter address" [(ngModel)]="editingMember.address" class="form-input" />
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" [disabled]="editForm.invalid" class="btn btn-primary btn-lg">
+                  💾 Update Member
+                </button>
+                <button type="button" (click)="editingMember = null" class="btn btn-ghost">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

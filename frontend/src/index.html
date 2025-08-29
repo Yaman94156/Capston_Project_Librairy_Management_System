@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Basic Meta Tags -->
+  <meta charset="utf-8">
+  <title>Library Management System - Digital Library Solutions</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Modern Library Management System for efficient book lending, member management, and library operations. Streamline your library with our comprehensive digital solution.">
+  <meta name="keywords" content="library management, book lending, library software, digital library, book tracking, member management">
+  <meta name="author" content="Library Management System">
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Library Management System">
+  <meta property="og:description" content="Modern digital solution for comprehensive library management">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+  <meta property="og:site_name" content="Library Management System">
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Library Management System">
+  <meta name="twitter:description" content="Modern digital solution for comprehensive library management">
+  <meta name="twitter:image" content="">
+  
+  <!-- Favicon and Icons -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon.ico">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#3b82f6">
+  <meta name="msapplication-TileColor" content="#3b82f6">
+  
+  <!-- Prevent Flash of Unstyled Content -->
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #f9fafb 0%, #93c5fd 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+      color: #1f2937;
+    }
+    
+    app-root {
+      display: block;
+      min-height: 100vh;
+    }
+    
+    /* Loading State */
+    .initial-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #f9fafb 0%, #93c5fd 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      color: #374151;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e5e7eb;
+      border-top: 4px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+    
+    .loading-text {
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: #6b7280;
+    }
+    
+    .loading-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Hide loading once app is ready */
+    app-root:not(:empty) + .initial-loading {
+      display: none;
+    }
+  </style>
+  
+  <!-- Preload Critical Resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Performance Optimization -->
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="dns-prefetch" href="//fonts.gstatic.com">
+</head>
+<body>
+  <app-root>
+    <!-- Initial loading state -->
+    <div class="initial-loading">
+      <div class="loading-icon">📚</div>
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading Library Management System...</div>
+    </div>
+  </app-root>
+  
+  <!-- Fallback for users with JavaScript disabled -->
+  <noscript>
+    <div style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #f9fafb 0%, #93c5fd 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #374151;
+    ">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
+      <h1 style="font-size: 1.5rem; margin-bottom: 1rem; color: #1f2937;">Library Management System</h1>
+      <p style="font-size: 1rem; color: #6b7280; margin-bottom: 1rem;">
+        This application requires JavaScript to function properly.
+      </p>
+      <p style="font-size: 0.875rem; color: #9ca3af;">
+        Please enable JavaScript in your browser settings and refresh the page.
+      </p>
+    </div>
+  </noscript>
+</body>
+</html>
